@@ -240,7 +240,7 @@ function App() {
 
       <DragOverlay dropAnimation={customDropAnimation}>
         {!activeDragItemType && null}
-        {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
+        {activeDragItemType === ACTIVE_DRAG_ITEM_TqYPE.COLUMN && (
           <Column column={activeDragItemData} />
         )}
         {/* {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD && (

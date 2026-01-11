@@ -18,7 +18,7 @@ export function Column({ column }) {
     isDragging,
   } = useSortable({
     id: column.id,
-    data: { type: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN' },
+    data: column,
   })
 
   const style = {
@@ -39,9 +39,14 @@ export function Column({ column }) {
       <div className="font-bold bg-[#ddd] p-2.5 mb-2.5 cursor-grab">
         {column.title}
       </div>
-      {column?.cards?.map((card) => (
-        <Card key={card.id} content={card.content} />
-      ))}
+      <SortableContext
+        items={column?.cards?.map((card) => card.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        {column?.cards?.map((card) => (
+          <Card key={card.id} card={card} />
+        ))}
+      </SortableContext>
     </div>
   )
 }

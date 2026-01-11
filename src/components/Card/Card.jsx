@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-function Card({ id, content }) {
+function Card({ card }) {
   const {
     attributes,
     listeners,
@@ -9,7 +9,7 @@ function Card({ id, content }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id, data: { type: 'item' } })
+  } = useSortable({ id: card.id, data: card })
 
   const style = {
     // transform: CSS.Translate.toString(transform),
@@ -25,10 +25,13 @@ function Card({ id, content }) {
 
   return (
     <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
       className="p-2.5 my-1 bg-white border border-gray-200 rounded shadow-sm"
       style={style}
     >
-      {content}
+      {card.content}
     </div>
   )
 }

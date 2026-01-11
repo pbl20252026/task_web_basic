@@ -32,25 +32,52 @@ function App() {
   // Data mẫu
   const [boards, setBoards] = useState([
     {
-      id: 'Board-1',
-      columnOrderIds: ['col-1', 'col-2'],
+      id: 'ff6832b2-1702-40ac-b19b-fae2961eae53',
+      columnOrderIds: [
+        'bb7d1ca9-7562-4b41-8d0e-2e1f09293fd8',
+        '8863118f-114b-4e16-951a-ff9421d2c66b',
+      ],
       columns: [
         {
-          id: 'col-1',
-          cardOrderIds: ['item-1', 'item-2'],
+          id: 'bb7d1ca9-7562-4b41-8d0e-2e1f09293fd8',
+          cardOrderIds: [
+            '89df50b4-ca09-4c12-b492-90885809b5c6',
+            '12c84d2b-065d-4594-9bce-22778bf6ad49',
+          ],
           title: 'Column 1',
           cards: [
-            { id: 'item-1', content: 'Item 1' },
-            { id: 'item-2', content: 'Item 2' },
+            {
+              boardId: 'ff6832b2-1702-40ac-b19b-fae2961eae53',
+              columnId: 'bb7d1ca9-7562-4b41-8d0e-2e1f09293fd8',
+              id: '89df50b4-ca09-4c12-b492-90885809b5c6',
+              content: 'Item 1',
+            },
+            {
+              boardId: 'Board-1',
+              columnId: 'bb7d1ca9-7562-4b41-8d0e-2e1f09293fd8',
+              id: '12c84d2b-065d-4594-9bce-22778bf6ad49',
+              content: 'Item 2',
+            },
           ],
         },
         {
-          id: 'col-2',
-          cardOrderIds: ['item-1', 'item-2'],
+          id: '8863118f-114b-4e16-951a-ff9421d2c66b',
+          cardOrderIds: [
+            '2137dfa5-92d0-4ab0-b80f-b10756872b1a',
+            '459ab590-add6-453d-bc9a-450688d614d8',
+          ],
           title: 'Column 2',
           cards: [
-            { id: 'item-1', content: 'Item 1' },
-            { id: 'item-2', content: 'Item 2' },
+            {
+              columnId: '8863118f-114b-4e16-951a-ff9421d2c66b',
+              id: '2137dfa5-92d0-4ab0-b80f-b10756872b1a',
+              content: 'Item 1',
+            },
+            {
+              columnId: '8863118f-114b-4e16-951a-ff9421d2c66b',
+              id: '459ab590-add6-453d-bc9a-450688d614d8',
+              content: 'Item 2',
+            },
           ],
         },
       ],
@@ -105,8 +132,13 @@ function App() {
   // Triggered when drag starts
   const handleDragStart = (event) => {
     console.log('🚀 ~ handleDragStart ~ event:', event)
-    setActiveDragItemType(event.active.data.current?.type)
-    setActiveDragItemData(event.active.data.current)
+    setActiveDragItemType(
+      event?.active?.data?.current?.columnId
+        ? ACTIVE_DRAG_ITEM_TYPE.CARD
+        : ACTIVE_DRAG_ITEM_TYPE.COLUMN,
+    )
+
+    setActiveDragItemData(event?.active?.data?.current)
   }
 
   // Triggered when drag over
@@ -124,7 +156,7 @@ function App() {
     if (!active || !over) return
 
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
-      if (active.id !== over.id) {
+      if (active?.id !== over?.id) {
         const oldColumnIndex = orderedColumns?.findIndex(
           (col) => col.id === active.id,
         )
@@ -157,9 +189,10 @@ function App() {
       styles: { active: { opacity: 0.5 } },
     }),
   }
+
   return (
     <DndContext
-      // sensors={sensors}
+      sensors={sensors}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
@@ -169,7 +202,7 @@ function App() {
           items={boards[0]?.columns.map((c) => c.id)}
           strategy={horizontalListSortingStrategy}
         >
-          {boards[0].columns.map((column) => (
+          {boards[0]?.columns?.map((column) => (
             <Column key={column.id} id={column.id} column={column} />
           ))}
         </SortableContext>

@@ -23,6 +23,20 @@ function Card({ card }) {
     // opacity: isDragging ? 0.5 : 1,
   }
 
+  // event onClick 
+const sensors = useSensors(
+  useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 8, // Người dùng phải di chuyển chuột 8px thì mới bắt đầu kéo
+    },
+  }),
+  useSensor(KeyboardSensor)
+);
+
+const handleClick = () => {
+    alert(`Card clicked: ${card.content}`);
+}
+
   return (
     <div
       ref={setNodeRef}
@@ -30,6 +44,7 @@ function Card({ card }) {
       {...listeners}
       className="p-2.5 my-1 bg-white border border-gray-200 rounded shadow-sm"
       style={style}
+      onClick={handleClick}
     >
       {card.content}
     </div>

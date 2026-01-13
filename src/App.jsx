@@ -3,7 +3,6 @@ import { useState } from 'react'
 import {
   DndContext,
   closestCorners,
-  PointerSensor,
   useSensor,
   useSensors,
   DragOverlay,

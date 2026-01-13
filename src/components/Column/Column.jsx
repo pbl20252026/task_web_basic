@@ -37,6 +37,8 @@ export function Column({ column, setBoards }) {
   const handleAddNewCard = (columnId) => {
     setIsAddingCard(true)
 
+    if (!newCardContent.trim()) return
+
     setBoards((prevBoards) => {
       const newBoards = [...prevBoards]
       const board = newBoards[0] // Assuming there's only one board for simplicity

@@ -17,9 +17,19 @@ function Card({ card }) {
     opacity: isDragging ? 0.5 : 1 && card.placeholder ? 0 : 1,
   }
 
-  const handleClick = () => {
-    alert(`Card clicked: ${card.content}`)
-  }
+  // event onClick 
+// const sensors = useSensors(
+//   useSensor(PointerSensor, {
+//     activationConstraint: {
+//       distance: 8, // Người dùng phải di chuyển chuột 8px thì mới bắt đầu kéo
+//     },
+//   }),
+//   useSensor(KeyboardSensor)
+// );
+
+const handleClick = () => {
+    alert(`Card clicked: ${card.content}`);
+}
 
   return (
     <div
@@ -28,6 +38,7 @@ function Card({ card }) {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
+      // style={style}
       onClick={handleClick}
     >
       {card.content}

@@ -3,7 +3,6 @@ import { useState } from 'react'
 import {
   DndContext,
   closestCorners,
-  PointerSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -23,6 +22,8 @@ import Card from './components/Card/Card'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+
+import { Toaster } from 'sonner'
 
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -156,10 +157,6 @@ function App() {
     over,
     active,
   }) => {
-    console.log(
-      '🚀 ~ handleMoveCardBetweenDifferentColumns ~ activeColumn:',
-      activeColumn,
-    )
     setBoards((prevBoards) => {
       const overCardIndex = overColumn?.cards?.findIndex(
         (card) => card.id === over.id,
@@ -180,10 +177,7 @@ function App() {
         overCardIndex >= 0
           ? overCardIndex + modifier
           : overColumn?.cards?.length + 1
-      console.log(
-        '🚀 ~ handleMoveCardBetweenDifferentColumns ~ newCardIndex:',
-        newCardIndex,
-      )
+
       // Update the columns array
       const nextColumns = [...prevBoards[0]?.columns]
 
@@ -196,10 +190,6 @@ function App() {
       if (nextActiveColumn) {
         // Remove card from active column
         nextActiveColumn.cards = nextActiveColumn.cards.filter((card) => {
-          console.log(
-            '🚀 ~ handleMoveCardBetweenDifferentColumns ~ Xóa activeDraggingCardId:',
-            activeDraggingCardId,
-          )
           return card.id !== activeDraggingCardId
         })
 
@@ -240,17 +230,13 @@ function App() {
           (card) => !card.placeholder,
         )
       }
-      console.log(
-        '🚀 ~ handleMoveCardBetweenDifferentColumns ~ nextColumns:',
-        nextColumns,
-      )
+
       return [{ ...prevBoards[0], columns: nextColumns }]
     })
   }
 
   // Triggered when drag starts
   const handleDragStart = (event) => {
-    console.log('🚀 ~ handleDragStart ~ event:', event)
     setActiveDragItemType(
       event?.active?.data?.current?.columnId
         ? ACTIVE_DRAG_ITEM_TYPE.CARD
@@ -264,8 +250,6 @@ function App() {
 
   // Triggered when drag over
   const handleDragOver = (event) => {
-    console.log('🚀 ~ handleDragOver ~ event:', event)
-
     // don't do anything when dragging column
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return
 
@@ -281,9 +265,7 @@ function App() {
     const { id: overCardId } = over
 
     const activeColumn = findColumnByCardId(activeDraggingCardId)
-    console.log('🚀 ~ handleDragOver ~ activeColumn:', activeColumn)
     const overColumn = findColumnByCardId(overCardId)
-    console.log('🚀 ~ handleDragOver ~ overColumn:', overColumn)
 
     if (!activeColumn || !overColumn) return
 
@@ -301,7 +283,6 @@ function App() {
 
   // Triggered when drag ends
   const handleDragEnd = (event) => {
-    console.log('🚀 ~ handleDragEnd ~ event:', event)
     const { active, over } = event
     if (!active || !over) return
 
@@ -344,7 +325,6 @@ function App() {
 
       if (overColumn?.id !== oldColumnWhenDraggingCard?.id) {
         // Moving card to different column
-        console.log('Moving card to different column')
 
         handleMoveCardBetweenDifferentColumns({
           activeDraggingCardId,
@@ -354,11 +334,8 @@ function App() {
           over,
           active,
         })
-
-        console.log('🚀 ~ handleDragEnd ~ overColumn:', overColumn)
       } else {
         // Moving card in the same column
-        console.log('Moving card in the same column')
         // Get old card index
         const oldCardIndex = oldColumnWhenDraggingCard?.cards?.findIndex(
           (card) => card.id === active?.id,
@@ -406,72 +383,76 @@ function App() {
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-      // Algorithm to detect collision
-      collisionDetection={closestCorners}
-    >
-      <div className="p-12 flex items-start h-screen shrink-0 overflow-x-auto">
-        <SortableContext
-          items={boards[0]?.columns?.map((c) => c.id) || []}
-          strategy={horizontalListSortingStrategy}
-        >
-          {boards[0]?.columns?.map((column) => (
-            <Column
-              key={column.id}
-              id={column.id}
-              column={column}
-              setBoards={setBoards}
-            />
-          ))}
-        </SortableContext>
+    <div className="overflow-x-auto w-350 h-350">
+      <Toaster visibleToasts={5} expand />
 
-        {addNewColumn || (
-          <Button onClick={() => setAddNewColumn(true)}>Add Column</Button>
-        )}
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+        // Algorithm to detect collision
+        collisionDetection={closestCorners}
+      >
+        <div className="p-12 flex items-start h-screen shrink-0">
+          <SortableContext
+            items={boards[0]?.columns?.map((c) => c.id) || []}
+            strategy={horizontalListSortingStrategy}
+          >
+            {boards[0]?.columns?.map((column) => (
+              <Column
+                key={column.id}
+                id={column.id}
+                column={column}
+                setBoards={setBoards}
+              />
+            ))}
+          </SortableContext>
 
-        {addNewColumn && (
-          <div className="flex max-w-sm gap-2">
-            <Input
-              className="min-w-44 flex-1"
-              type="text"
-              size="sm"
-              placeholder="Title"
-              onChange={(e) => setNewColumnTitle(e.target.value)}
-            />
+          {addNewColumn || (
+            <Button onClick={() => setAddNewColumn(true)}>Add Column</Button>
+          )}
 
-            <Button
-              className="cursor-pointer"
-              variant="outline"
-              onClick={handleAddColumn}
-            >
-              Add
-            </Button>
+          {addNewColumn && (
+            <div className="flex max-w-sm gap-2">
+              <Input
+                className="min-w-44 flex-1"
+                type="text"
+                size="sm"
+                placeholder="Title"
+                onChange={(e) => setNewColumnTitle(e.target.value)}
+              />
 
-            <Button
-              className="cursor-pointer"
-              variant="outline"
-              onClick={() => setAddNewColumn(false)}
-            >
-              ❌
-            </Button>
-          </div>
-        )}
-      </div>
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                onClick={handleAddColumn}
+              >
+                Add
+              </Button>
 
-      <DragOverlay dropAnimation={customDropAnimation}>
-        {!activeDragItemType && null}
-        {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
-          <Column column={activeDragItemData} />
-        )}
-        {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD && (
-          <Card card={activeDragItemData} />
-        )}
-      </DragOverlay>
-    </DndContext>
+              <Button
+                className="cursor-pointer"
+                variant="outline"
+                onClick={() => setAddNewColumn(false)}
+              >
+                ❌
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <DragOverlay dropAnimation={customDropAnimation}>
+          {!activeDragItemType && null}
+          {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
+            <Column column={activeDragItemData} />
+          )}
+          {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD && (
+            <Card card={activeDragItemData} />
+          )}
+        </DragOverlay>
+      </DndContext>
+    </div>
   )
 }
 export default App

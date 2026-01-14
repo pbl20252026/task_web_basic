@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState } from 'react' 
+import { useEffect } from 'react';
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -11,7 +12,7 @@ import Card from '../Card/Card'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
+ 
 export function Column({ column, setBoards }) {
   const [isAddingCard, setIsAddingCard] = useState(false)
   const [newCardContent, setNewCardContent] = useState('')
@@ -62,21 +63,28 @@ export function Column({ column, setBoards }) {
     })
   }
   // scroll event handler
-  const handleScroll = (event) => {
-    // 1. Lấy vị trí cuộn nội bộ của chính Column/Card đó
-    const scrollTop = event.currentTarget.scrollTop;
-    const scrollLeft = event.currentTarget.scrollLeft;
-  
-    // 2. Lấy tọa độ cuộn của toàn trình duyệt 
-    const windowX = window.scrollX;
-    const windowY = window.scrollY;
-  
-    // 3. Tính toán tọa độ tuyệt đối nếu cần
-    const rect = event.currentTarget.getBoundingClientRect();
-    const absoluteY = windowY + rect.top;
-  
-    console.log(`Cuộn nội bộ: ${scrollTop}px | Cuộn trình duyệt: ${windowY}px`);
-  };
+
+  useEffect(() => {
+        const handleWindowScroll = () => {
+            const windowX = window.scrollX;
+            const windowY = window.scrollY;
+            console.log(`--- Window Scroll --- Tọa độ: X=${windowX}, Y=${windowY}`);
+        };
+
+        window.addEventListener('scroll', handleWindowScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleWindowScroll);
+        };
+    }, []);
+
+    //  Hàm xử lý nội bộ 
+    const handleColumnScroll = (event) => {
+        const scrollTop = event.currentTarget.scrollTop;
+        console.log(`Cuộn nội bộ Column: ${scrollTop}px`);
+    }; 
+
+
   return (
     <div
       className="flex flex-col w-75 min-w-75 max-h-[300px] bg-[#f4f5f7] p-2.5 m-2.5 rounded overflow-y-auto"
@@ -84,7 +92,7 @@ export function Column({ column, setBoards }) {
       style={style}
       {...attributes}
       {...listeners}
-      onScroll={handleScroll}
+      onScroll={handleColumnScroll}
     >
       <div className="font-bold bg-[#ddd] p-2.5 mb-2.5 cursor-grab">
         {column.title}

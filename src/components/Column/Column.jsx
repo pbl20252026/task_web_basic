@@ -64,22 +64,23 @@ export function Column({ column, setBoards }) {
   // scroll event handler
   const handleScroll = (event) => {
     // 1. Lấy vị trí cuộn nội bộ của chính Column/Card đó
-    const scrollTop = event.currentTarget.scrollTop;
-    const scrollLeft = event.currentTarget.scrollLeft;
-  
-    // 2. Lấy tọa độ cuộn của toàn trình duyệt 
-    const windowX = window.scrollX;
-    const windowY = window.scrollY;
-  
+    const scrollTop = event.currentTarget.scrollTop
+    const scrollLeft = event.currentTarget.scrollLeft
+
+    // 2. Lấy tọa độ cuộn của toàn trình duyệt
+    const windowX = window.scrollX
+    const windowY = window.scrollY
+
     // 3. Tính toán tọa độ tuyệt đối nếu cần
-    const rect = event.currentTarget.getBoundingClientRect();
-    const absoluteY = windowY + rect.top;
-  
-    console.log(`Cuộn nội bộ: ${scrollTop}px | Cuộn trình duyệt: ${windowY}px`);
-  };
+    const rect = event.currentTarget.getBoundingClientRect()
+    const absoluteY = windowY + rect.top
+
+    console.log(`Cuộn nội bộ: ${scrollTop}px | Cuộn trình duyệt: ${windowY}px`)
+  }
+
   return (
     <div
-      className="flex flex-col w-75 min-w-75 max-h-[300px] bg-[#f4f5f7] p-2.5 m-2.5 rounded overflow-y-auto"
+      className="flex flex-col w-75 min-w-75 max-h-75 bg-[#f4f5f7] p-2.5 m-2.5 rounded overflow-y-auto"
       ref={setNodeRef}
       style={style}
       {...attributes}

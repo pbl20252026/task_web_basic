@@ -1,4 +1,4 @@
-import { use, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { HandLandmarker, FilesetResolver } from '@mediapipe/tasks-vision'
 
 import { useVirtualCursor } from '../../customHooks/useVirtualCursor'
@@ -161,7 +161,7 @@ const HandTracker = ({ children }) => {
           y: middleFingerMCP.y,
           // Thêm logic nhận diện pinch nếu cần
           state: {
-            isPinching: distanceBetweenThumbAndFinger < 40,
+            isPinching: distanceBetweenThumbAndFinger < 30,
             // isScrolling: distanceBetweenFingerAndMiddleFinger < 35,
           },
         })
@@ -211,7 +211,7 @@ const HandTracker = ({ children }) => {
           bottom: 0,
           left: 0,
           // width: '640px',
-          height: '200px',
+          height: '380px',
           objectFit: 'cover',
           transform: 'scaleX(-1)', // Lật gương
           opacity: 0.5, // Làm mờ video để nổi bật canvas
@@ -226,7 +226,7 @@ const HandTracker = ({ children }) => {
           bottom: 0,
           left: 0,
           // width: '640px',
-          height: '200px',
+          height: '380px',
           objectFit: 'cover',
           transform: 'scaleX(-1)', // Lật gương theo video
           pointerEvents: 'none', // Để click xuyên qua canvas xuống dưới (nếu cần)

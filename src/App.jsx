@@ -85,7 +85,7 @@ function App() {
         {
           id: 'bf099426-9680-47bc-8e18-49af54853204',
           cardOrderIds: ['b1e85ad0-e47e-46c9-9cd3-0fe058ca69cf'],
-          title: 'Column 2',
+          title: 'Column 3',
           cards: [
             {
               id: 'b1e85ad0-e47e-46c9-9cd3-0fe058ca69cf',

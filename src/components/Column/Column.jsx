@@ -55,6 +55,11 @@ export function Column({ column, setBoards }) {
       }
 
       columnToUpdate.cards.push(newCardToAdd)
+
+      columnToUpdate.cards = columnToUpdate.cards.filter((card) => {
+        return !card.placeholder
+      })
+
       columnToUpdate.cardOrderIds.push(newCardToAdd.id)
 
       setIsAddingCard(false)
